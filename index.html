@@ -1,158 +1,391 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CRRP - Electronice</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CRRP - Electronice | Magazin Online</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; background: #f5f9ff; }
-    header { background: #0057b8; color: white; padding: 1rem; text-align: center; position: sticky; top: 0; z-index: 1000; }
-    h1 { margin: 0; }
-    nav { background: #004a99; padding: 0.5rem; text-align: center; }
-    nav a { color: white; margin: 0 1rem; text-decoration: none; }
-    .search-bar { margin-top: 1rem; display: flex; justify-content: center; gap: 0.5rem; }
-    .search-bar input, .search-bar select { padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; }
-    .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; padding: 1rem; }
-    .product { background: white; padding: 1rem; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); position: relative; }
-    .product img { width: 100%; height: 150px; object-fit: cover; cursor: pointer; }
-    .product h3 { margin: 0.5rem 0; }
-    .product button { background: #0057b8; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
-    .cart { padding: 1rem; background: #e6f0ff; }
-    .cart ul { list-style: none; padding: 0; }
-    .cart li { margin-bottom: 0.5rem; }
-    #popup { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; }
-    #popup .popup-content { background: white; padding: 2rem; border-radius: 8px; max-width: 500px; width: 90%; }
-    #popup .popup-content img { width: 100%; height: auto; }
-    footer { background: #004a99; color: white; text-align: center; padding: 1rem; margin-top: 2rem; }
+    /* Font și reset */
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f0f5ff;
+      color: #003366;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: #0057b8;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    header h1 {
+      font-weight: 700;
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+      cursor: default;
+    }
+    nav {
+      display: flex;
+      gap: 1.5rem;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 0.4rem 0.7rem;
+      border-radius: 5px;
+      transition: background 0.3s ease;
+    }
+    nav a:hover {
+      background: #004099;
+    }
+    .search-bar {
+      flex-grow: 1;
+      margin: 0 2rem;
+      display: flex;
+      max-width: 400px;
+    }
+    .search-bar input {
+      flex-grow: 1;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px 0 0 4px;
+      font-size: 1rem;
+    }
+    .search-bar button {
+      background: #003366;
+      border: none;
+      color: white;
+      padding: 0 1rem;
+      cursor: pointer;
+      border-radius: 0 4px 4px 0;
+      font-weight: 700;
+      transition: background 0.3s ease;
+    }
+    .search-bar button:hover {
+      background: #001f4d;
+    }
+    main {
+      margin-top: 90px;
+      display: flex;
+      gap: 1rem;
+      padding: 1rem 2rem;
+      flex-grow: 1;
+    }
+    aside {
+      width: 220px;
+      background: white;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      height: fit-content;
+      position: sticky;
+      top: 100px;
+    }
+    aside h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #0057b8;
+      padding-bottom: 0.5rem;
+      color: #003366;
+    }
+    aside ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    aside ul li {
+      cursor: pointer;
+      padding: 0.4rem 0.6rem;
+      border-radius: 4px;
+      transition: background 0.3s ease;
+      color: #0057b8;
+      font-weight: 600;
+    }
+    aside ul li:hover, aside ul li.active {
+      background: #cce0ff;
+    }
+    section.products {
+      flex-grow: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+    }
+    .product-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+    .product-info {
+      padding: 1rem 1.2rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .product-info h3 {
+      font-size: 1.15rem;
+      color: #003366;
+      margin-bottom: 0.3rem;
+    }
+    .product-info p.desc {
+      font-size: 0.9rem;
+      color: #555;
+      flex-grow: 1;
+      margin-bottom: 1rem;
+    }
+    .product-info p.price {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #0057b8;
+      margin-bottom: 1rem;
+    }
+    .product-info button {
+      background: #0057b8;
+      border: none;
+      color: white;
+      padding: 0.7rem;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .product-info button:hover {
+      background: #003366;
+    }
+    /* Cart Sidebar */
+    aside.cart {
+      width: 300px;
+      background: white;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      height: fit-content;
+      position: sticky;
+      top: 100px;
+      display: flex;
+      flex-direction: column;
+    }
+    aside.cart h2 {
+      margin-bottom: 1rem;
+      color: #003366;
+      border-bottom: 2px solid #0057b8;
+      padding-bottom: 0.5rem;
+    }
+    .cart-list {
+      list-style: none;
+      flex-grow: 1;
+      overflow-y: auto;
+      max-height: 350px;
+      margin-bottom: 1rem;
+    }
+    .cart-list li {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0.2rem;
+      border-bottom: 1px solid #ddd;
+      font-weight: 600;
+      color: #003366;
+    }
+    .cart-list li button {
+      background: #e63946;
+      border: none;
+      color: white;
+      padding: 0 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background 0.3s ease;
+    }
+    .cart-list li button:hover {
+      background: #b22222;
+    }
+    .cart-total {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0057b8;
+      text-align: right;
+    }
+    /* Footer */
+    footer {
+      background: #003366;
+      color: white;
+      padding: 1.5rem 2rem;
+      text-align: center;
+      margin-top: auto;
+    }
+    footer p {
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    footer a {
+      color: #a8d0ff;
+      text-decoration: none;
+      font-weight: 600;
+      margin: 0 0.5rem;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+    /* Responsive */
+    @media (max-width: 1024px) {
+      main {
+        flex-direction: column;
+        padding: 1rem;
+      }
+      aside {
+        width: 100%;
+        position: relative;
+        top: auto;
+        margin-bottom: 1rem;
+      }
+      aside.cart {
+        width: 100%;
+      }
+      nav {
+        display: none; /* simplu meniu mobil, nu am adăugat aici */
+      }
+      .search-bar {
+        margin: 0 0 1rem 0;
+        max-width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <h1>CRRP - Electronice</h1>
-    <div class="search-bar">
-      <input type="text" id="search" placeholder="Caută produse..." oninput="renderProducts()">
-      <select id="price-filter" onchange="renderProducts()">
-        <option value="">Filtrează după preț</option>
-        <option value="0-500">0 - 500 RON</option>
-        <option value="500-2000">500 - 2000 RON</option>
-        <option value="2000-5000">2000 - 5000 RON</option>
-      </select>
-    </div>
-  </header>
 
+<header>
+  <h1>CRRP</h1>
   <nav>
     <a href="#">Acasă</a>
-    <a href="#cart">Coș</a>
-    <a href="#despre">Despre noi</a>
-    <a href="#contact">Contact</a>
+    <a href="#">Produse</a>
+    <a href="#">Despre noi</a>
+    <a href="#">Contact</a>
   </nav>
+  <div class="search-bar">
+    <input id="search" type="text" placeholder="Caută produse..." oninput="renderProducts()" />
+    <button onclick="renderProducts()">Caută</button>
+  </div>
+</header>
+
+<main>
+  <aside>
+    <h2>Categorii</h2>
+    <ul id="categories">
+      <li class="active" onclick="filterCategory('toate')">Toate</li>
+      <li onclick="filterCategory('telefoane')">Telefoane</li>
+      <li onclick="filterCategory('laptopuri')">Laptopuri</li>
+      <li onclick="filterCategory('casti')">Căști</li>
+    </ul>
+  </aside>
 
   <section class="products" id="product-list"></section>
 
-  <section class="cart" id="cart">
+  <aside class="cart">
     <h2>Coș de cumpărături</h2>
-    <ul id="cart-list"></ul>
-    <strong>Total: <span id="total">0</span> RON</strong>
-  </section>
+    <ul class="cart-list" id="cart-list"></ul>
+    <div class="cart-total">Total: <span id="total">0</span> RON</div>
+  </aside>
+</main>
 
-  <div id="popup">
-    <div class="popup-content">
-      <h3 id="popup-title"></h3>
-      <img id="popup-img" src="" alt="Produs">
-      <p id="popup-desc"></p>
-      <p id="popup-price"></p>
-      <button onclick="closePopup()">Închide</button>
-    </div>
-  </div>
+<footer>
+  <p>© 2025 CRRP - Magazin online de electronice</p>
+  <p>
+    Urmărește-ne pe:
+    <a href="#" target="_blank">Facebook</a> |
+    <a href="#" target="_blank">Instagram</a> |
+    <a href="#" target="_blank">LinkedIn</a>
+  </p>
+</footer>
 
-  <section id="despre" style="padding: 2rem; background: #fff;">
-    <h2>Despre noi</h2>
-    <p>CRRP este un magazin online dedicat produselor electronice, oferind o selecție atent aleasă pentru nevoile tale tehnologice.</p>
-  </section>
+<script>
+  const products = [
+    {id: 1, name: "Telefon Inteligent", price: 1200, category: "telefoane", img: "https://via.placeholder.com/240x160?text=Telefon", desc: "Telefon performant cu cameră de 48MP."},
+    {id: 2, name: "Laptop Performant", price: 3500, category: "laptopuri", img: "https://via.placeholder.com/240x160?text=Laptop", desc: "Laptop ideal pentru muncă și gaming."},
+    {id: 3, name: "Căști Wireless", price: 400, category: "casti", img: "https://via.placeholder.com/240x160?text=Casti", desc: "Sunet clar și autonomie extinsă."},
+    {id: 4, name: "Telefon Nou", price: 1600, category: "telefoane", img: "https://via.placeholder.com/240x160?text=Telefon+Nou", desc: "Model nou, cu ecran OLED."},
+    {id: 5, name: "Laptop Business", price: 2800, category: "laptopuri", img: "https://via.placeholder.com/240x160?text=Laptop+Business", desc: "Laptop ușor și performant pentru afaceri."}
+  ];
 
-  <section id="contact" style="padding: 2rem; background: #f0f8ff;">
-    <h2>Contact</h2>
-    <p>Email: contact@crrp.ro</p>
-    <p>Telefon: +40 723 123 456</p>
-  </section>
+  let currentCategory = "toate";
+  const cart = [];
 
-  <footer>
-    &copy; 2025 CRRP. Toate drepturile rezervate.
-  </footer>
+  function renderProducts() {
+    const container = document.getElementById('product-list');
+    container.innerHTML = '';
+    const search = document.getElementById('search').value.toLowerCase();
 
-  <script>
-    const products = [
-      { name: "Telefon Inteligent", price: 1200, img: "https://via.placeholder.com/200x150?text=Telefon", desc: "Telefon performant cu cameră de 48MP." },
-      { name: "Laptop Performant", price: 3500, img: "https://via.placeholder.com/200x150?text=Laptop", desc: "Laptop ideal pentru muncă și gaming." },
-      { name: "Căști Wireless", price: 400, img: "https://via.placeholder.com/200x150?text=Casti", desc: "Sunet clar și autonomie extinsă." }
-    ];
+    let filtered = products.filter(p => 
+      (currentCategory === "toate" || p.category === currentCategory) &&
+      p.name.toLowerCase().includes(search)
+    );
 
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    if(filtered.length === 0) {
+      container.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#555;">Niciun produs găsit.</p>';
+      return;
+    }
 
-    function renderProducts() {
-      const container = document.getElementById('product-list');
-      container.innerHTML = '';
-      const search = document.getElementById('search').value.toLowerCase();
-      const priceFilter = document.getElementById('price-filter').value;
-
-      let filtered = products.filter(p => p.name.toLowerCase().includes(search));
-
-      if (priceFilter) {
-        const [min, max] = priceFilter.split('-').map(Number);
-        filtered = filtered.filter(p => p.price >= min && p.price <= max);
-      }
-
-      filtered.forEach(p => {
-        const div = document.createElement('div');
-        div.className = 'product';
-        div.innerHTML = `
-          <img src="${p.img}" alt="${p.name}" onclick="showPopup('${p.name}')">
+    filtered.forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'product-card';
+      div.innerHTML = `
+        <img src="${p.img}" alt="${p.name}" />
+        <div class="product-info">
           <h3>${p.name}</h3>
-          <p>Preț: ${p.price} RON</p>
-          <button onclick="addToCart('${p.name}', ${p.price})">Adaugă în coș</button>
-        `;
-        container.appendChild(div);
-      });
-    }
+          <p class="desc">${p.desc}</p>
+          <p class="price">${p.price} RON</p>
+          <button onclick="addToCart(${p.id})">Adaugă în coș</button>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+  }
 
-    function addToCart(name, price) {
-      cart.push({ name, price });
-      localStorage.setItem('cart', JSON.stringify(cart));
-      renderCart();
-      alert(`Produsul \"${name}\" a fost adăugat în coș.`);
-    }
+  function filterCategory(cat) {
+    currentCategory = cat;
+    // activează clasa active în meniu
+    document.querySelectorAll('#categories li').forEach(li => {
+      li.classList.toggle('active', li.textContent.toLowerCase() === (cat === 'toate' ? 'toate' : cat));
+    });
+    renderProducts();
+  }
 
-    function renderCart() {
-      const list = document.getElementById('cart-list');
-      list.innerHTML = '';
-      let total = 0;
-      cart.forEach(item => {
-        const li = document.createElement('li');
-        li.textContent = `${item.name} - ${item.price} RON`;
-        list.appendChild(li);
-        total += item.price;
-      });
-      document.getElementById('total').textContent = total;
-    }
+  function addToCart(productId) {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+    cart.push(product);
+    renderCart();
+    alert(`Produsul "${product.name}" a fost adăugat în coș.`);
+  }
 
-    function showPopup(productName) {
-      const p = products.find(p => p.name === productName);
-      if (!p) return;
-      document.getElementById('popup-title').textContent = p.name;
-      document.getElementById('popup-img').src = p.img;
-      document.getElementById('popup-desc').textContent = p.desc;
-      document.getElementById('popup-price').textContent = `Preț: ${p.price} RON`;
-      document.getElementById('popup').style.display = 'flex';
-    }
-
-    function closePopup() {
-      document.getElementById('popup').style.display = 'none';
-    }
-
-    window.onload = () => {
-      renderProducts();
-      renderCart();
-    };
-  </script>
-</body>
-</html>
+  function renderCart() {
+    const list = document.getElementBy
